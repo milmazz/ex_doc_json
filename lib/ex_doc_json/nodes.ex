@@ -1,54 +1,63 @@
 require Protocol
 
+# Represents a Module
 Protocol.derive(Jason.Encoder, ExDoc.ModuleNode,
   only: [
-    :module,
-    # :doc,
+    # :doc, :docs, :nested_context, :id, :rendered_doc, :docs_groups
+    # TODO: Missing ones...
+    :annotations,
+    :deprecated,
+    :doc_format,
     :doc_line,
+    :group,
+    :language,
+    :module,
+    :nested_title,
+    :source_doc,
     :source_path,
     :source_url,
     :title,
     :type,
-    :typespecs,
-    :annotations
+    :typespecs
   ]
 )
 
+# Represents an individual type
 Protocol.derive(Jason.Encoder, ExDoc.TypeNode,
   only: [
-    :name,
+    # TODO: Missing ones...
+    # :doc, :spec,
+    :annotations,
     :arity,
-    :type,
     :deprecated,
-    # :doc,
-    :source_doc,
-    :rendered_doc,
     :doc_line,
+    :name,
+    :rendered_doc,
+    :signature,
+    :source_doc,
     :source_path,
     :source_url,
-    # :spec,
-    :signature,
-    :annotations
+    :type
   ]
 )
 
+# Represents an individual function
 Protocol.derive(Jason.Encoder, ExDoc.FunctionNode,
   only: [
-    :name,
+    # TODO: Missing ones...
+    # :doc, :specs,
+    :annotations,
     :arity,
     :defaults,
     :deprecated,
-    # :doc,
-    :source_doc,
-    :rendered_doc,
-    :type,
-    :signature,
-    # :specs,
-    :annotations,
-    :group,
     :doc_line,
+    :group,
+    :rendered_doc,
+    :signature,
+    :source_doc,
     :source_path,
-    :source_url
+    :source_url,
+    :type
   ]
 )
 
@@ -59,26 +68,24 @@ defmodule ExDocJSON.ProjectNode do
 
   @derive [Jason.Encoder]
   defstruct [
+    :description,
+    :homepage_url,
+    :icon,
+    :items,
+    :language,
     :name,
     :version,
-    :homepage_url,
-    :description,
-    :icon,
-    :language,
-    :items,
-    :attachments,
-    :extras,
     about: "ExDoc/version/1"
   ]
 
   @type t :: %__MODULE__{
           about: String.t(),
-          name: String.t(),
-          version: String.t(),
-          homepage_url: String.t(),
           description: String.t(),
+          homepage_url: String.t(),
           icon: String.t(),
+          items: map,
           language: String.t(),
-          items: map
+          name: String.t(),
+          version: String.t()
         }
 end

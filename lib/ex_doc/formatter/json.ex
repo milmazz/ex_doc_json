@@ -22,20 +22,17 @@ defmodule ExDoc.Formatter.JSON do
 
   * `module` - Module name
   * `title` - Module title
-  * `doc` - Module documentation summary
+  * `source_doc` - Module documentation summary
   * `doc_line` - Line number where the module documentation starts
   * `source_path` - Path to the source code file in the project
   * `source_url` - URL to the source code
-  * `types` - List of types
-  * `functions` - List of functions
-  * `callbacks` - List of callbacks
+  * `type` - Specifies if the component is a module, exception, etc.
 
   ### Function, callback, and type details
 
-  * `name` - Function name
   * `arity`- Function arity
   * `defaults` - Default argument values
-  * `doc` - Function documentation
+  * `source_doc` - Function documentation
   * `doc_line` - Line number where the module documentation starts
   * `source_path` - Path to the source code file in the project
   * `source_url` - URL to the source code
@@ -50,7 +47,9 @@ defmodule ExDoc.Formatter.JSON do
   * `title` - Document title
   * `group` - Specifies the group
   * `content` - The document content in HTML format
+
   ## Attachments
+
   * `path` - Relative path
   * `title` - Attachment title
   * `size_in_bytes` - File size in bytes
