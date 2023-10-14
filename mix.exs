@@ -34,7 +34,7 @@ defmodule ExDocJson.MixProject do
   defp package do
     [
       maintainers: ["Milton Mazzarri"],
-      licenses: ["MIT"],
+      licenses: ["Apache-2.0"],
       links: %{
         "GitHub" => "https://github.com/milmazz/ex_doc_json",
         "Docs" => "http://hexdocs.pm/ex_doc_json/#{@version}"
