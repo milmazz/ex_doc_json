@@ -3,12 +3,12 @@ require Protocol
 # Represents a Module
 Protocol.derive(Jason.Encoder, ExDoc.ModuleNode,
   only: [
-    # :doc, :docs, :nested_context, :id, :rendered_doc, :docs_groups
-    # TODO: Missing ones...
     :annotations,
     :deprecated,
     :doc_format,
     :doc_line,
+    :docs,
+    :docs_groups,
     :group,
     :language,
     :module,
@@ -25,8 +25,7 @@ Protocol.derive(Jason.Encoder, ExDoc.ModuleNode,
 # Represents an individual type
 Protocol.derive(Jason.Encoder, ExDoc.TypeNode,
   only: [
-    # TODO: Missing ones...
-    # :doc, :spec,
+    # :spec,
     :annotations,
     :arity,
     :deprecated,
@@ -44,11 +43,10 @@ Protocol.derive(Jason.Encoder, ExDoc.TypeNode,
 # Represents an individual function
 Protocol.derive(Jason.Encoder, ExDoc.FunctionNode,
   only: [
-    # TODO: Missing ones...
-    # :doc, :specs,
+    # :specs,
     :annotations,
     :arity,
-    :defaults,
+    # :defaults,
     :deprecated,
     :doc_line,
     :group,
@@ -77,7 +75,7 @@ defmodule ExDocJSON.ProjectNode do
   * `language` - Identifies the primary language of the documents.
   * `icon` - Identifies the URL of the project's logo
   * `items` - This JSON object contains modules, exceptions, protocols,
-    Mix tasks, extras, and attachments details.
+    Mix tasks, and extras details.
   """
 
   @derive [Jason.Encoder]

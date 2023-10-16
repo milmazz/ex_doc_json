@@ -14,7 +14,7 @@ defmodule ExDoc.Formatter.JSON do
   * `language` - Identifies the primary language of the documents.
   * `icon` - Identifies the URL of the project's logo
   * `items` - This JSON object contains modules, exceptions, protocols,
-    Mix tasks, extras, and attachments details.
+    Mix tasks, and extras details.
 
   ## Modules, Exceptions, Protocols, Mix tasks
 
@@ -47,16 +47,10 @@ defmodule ExDoc.Formatter.JSON do
   * `title` - Document title
   * `group` - Specifies the group
   * `content` - The document content in HTML format
-
-  ## Attachments
-
-  * `path` - Relative path
-  * `title` - Attachment title
-  * `size_in_bytes` - File size in bytes
   """
 
   alias Mix.Project
-  # alias ExDoc.Formatter.HTML
+  alias ExDoc.Formatter.HTML
 
   @spec run(
           [ExDoc.ModuleNode.t()]
@@ -110,46 +104,13 @@ defmodule ExDoc.Formatter.JSON do
       description: config.description,
       icon: config.logo,
       items: %{
-        modules: as_module_node(project_nodes[:module]),
-        exceptions: as_module_node(project_nodes[:exception]),
-        protocols: as_module_node(project_nodes[:protocol]),
-        tasks: as_module_node(project_nodes[:task]),
-        # extras: HTML.build_extras(project_nodes, config, ".html"),
-        attachments: extract_attachments_info(config)
+        modules: project_nodes[:module] || [],
+        exceptions: project_nodes[:exception] || [],
+        protocols: project_nodes[:protocol] || [],
+        tasks: project_nodes[:task] || [],
+        extras: config |> HTML.build_extras(".html") |> Enum.map(&Map.delete(&1, :content))
       },
       language: config.language
     }
-  end
-
-  defp as_module_node(nil), do: []
-
-  defp as_module_node(project_nodes) do
-    project_nodes
-    |> Enum.map(fn mod ->
-      mod =
-        mod
-        |> Map.from_struct()
-
-      # |> Map.merge(HTML.Templates.group_summary(mod))
-
-      struct(ExDoc.ModuleNode, mod)
-    end)
-  end
-
-  defp extract_attachments_info(config) do
-    if path = config.assets do
-      path
-      |> Path.join("**/*")
-      |> Path.wildcard()
-      |> Enum.map(fn source ->
-        %{
-          path: Path.join("assets", Path.relative_to(source, path)),
-          # title: HTML.title_to_id(source),
-          size_in_bytes: File.stat!(source).size
-        }
-      end)
-    else
-      []
-    end
   end
 end
