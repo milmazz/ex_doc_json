@@ -56,9 +56,17 @@ defmodule ExDoc.Formatter.JSON do
   """
 
   alias Mix.Project
-  alias ExDoc.Formatter.HTML
+  # alias ExDoc.Formatter.HTML
 
-  def run(project_nodes, config) when is_map(config) do
+  @spec run(
+          [ExDoc.ModuleNode.t()]
+          | {[ExDoc.ModuleNode.t()], [ExDoc.ModuleNode.t()]},
+          ExDoc.Config.t()
+        ) :: String.t()
+  def run(project_nodes, config) when is_list(project_nodes) and is_map(config),
+    do: run({project_nodes, []}, config)
+
+  def run({project_nodes, _filtered_modules}, config) when is_map(config) do
     config =
       config
       |> normalize_config()
@@ -67,7 +75,7 @@ defmodule ExDoc.Formatter.JSON do
     config
     |> create_project_node(project_nodes)
     |> Jason.encode!()
-    |> write!(config.output)
+    |> then(&File.write!(config.output, &1))
 
     Path.relative_to_cwd(config.output)
   end
@@ -93,6 +101,8 @@ defmodule ExDoc.Formatter.JSON do
   end
 
   defp create_project_node(config, project_nodes) do
+    project_nodes = Enum.group_by(project_nodes, & &1.type)
+
     %ExDocJSON.ProjectNode{
       name: config.name,
       version: config.version,
@@ -100,10 +110,10 @@ defmodule ExDoc.Formatter.JSON do
       description: config.description,
       icon: config.logo,
       items: %{
-        modules: filter_by_type(:module, project_nodes),
-        exceptions: filter_by_type(:exception, project_nodes),
-        protocols: filter_by_type(:protocol, project_nodes),
-        tasks: filter_by_type(:task, project_nodes),
+        modules: as_module_node(project_nodes[:module]),
+        exceptions: as_module_node(project_nodes[:exception]),
+        protocols: as_module_node(project_nodes[:protocol]),
+        tasks: as_module_node(project_nodes[:task]),
         # extras: HTML.build_extras(project_nodes, config, ".html"),
         attachments: extract_attachments_info(config)
       },
@@ -111,9 +121,10 @@ defmodule ExDoc.Formatter.JSON do
     }
   end
 
-  defp filter_by_type(type, project_nodes) do
-    type
-    |> HTML.filter_list(project_nodes)
+  defp as_module_node(nil), do: []
+
+  defp as_module_node(project_nodes) do
+    project_nodes
     |> Enum.map(fn mod ->
       mod =
         mod
@@ -123,10 +134,6 @@ defmodule ExDoc.Formatter.JSON do
 
       struct(ExDoc.ModuleNode, mod)
     end)
-  end
-
-  defp write!(content, output) do
-    File.write!(output, content)
   end
 
   defp extract_attachments_info(config) do
