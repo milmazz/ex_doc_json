@@ -108,6 +108,7 @@ defmodule ExDoc.Formatter.JSON do
         exceptions: project_nodes[:exception] || [],
         protocols: project_nodes[:protocol] || [],
         tasks: project_nodes[:task] || [],
+        behaviours: project_nodes[:behaviour] || [],
         extras: config |> HTML.build_extras(".html") |> Enum.map(&Map.delete(&1, :content))
       },
       language: config.language
