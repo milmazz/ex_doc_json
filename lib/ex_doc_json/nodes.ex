@@ -64,6 +64,20 @@ Protocol.derive(Jason.Encoder, ExDoc.FunctionNode,
 defmodule ExDocJSON.ProjectNode do
   @moduledoc """
   Structure that represents a *project*
+
+  This struct represents the top-level information of the generated JSON.
+
+  ## Fields
+
+  * `about` - Indicates the version of the JSON structure format.
+  * `name` - Project name
+  * `version` - Project version
+  * `description` - Project summary description
+  * `homepage_url` - Specifies the project's home page
+  * `language` - Identifies the primary language of the documents.
+  * `icon` - Identifies the URL of the project's logo
+  * `items` - This JSON object contains modules, exceptions, protocols,
+    Mix tasks, extras, and attachments details.
   """
 
   @derive [Jason.Encoder]

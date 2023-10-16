@@ -1,5 +1,3 @@
 defmodule ExDocJson do
-  @moduledoc """
-  Documentation for `ExDocJson`.
-  """
+  @moduledoc false
 end

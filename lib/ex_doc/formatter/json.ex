@@ -58,7 +58,6 @@ defmodule ExDoc.Formatter.JSON do
   alias Mix.Project
   alias ExDoc.Formatter.HTML
 
-  @spec run(list, ExDoc.Config.t()) :: String.t()
   def run(project_nodes, config) when is_map(config) do
     config =
       config
