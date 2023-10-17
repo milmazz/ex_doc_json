@@ -26,9 +26,48 @@ defmodule ExDoc.Formatter.JSONTest do
 
   @tag :tmp_dir
   test "run generates JSON content", %{tmp_dir: tmp_dir} do
+    "test/fixtures/*.ex"
+    |> Path.wildcard()
+    |> Kernel.ParallelCompiler.compile_to_path(tmp_dir)
+
+    true = Code.prepend_path(tmp_dir)
+
     [language: "fr", tmp_dir: tmp_dir] |> doc_config() |> generate_docs()
 
-    assert %{"version" => "1.0.1", "name" => "Elixir", "language" => "fr"} =
-             tmp_dir |> Path.join("elixir.json") |> File.read!() |> Jason.decode!()
+    assert %{"version" => "1.0.1", "name" => "Elixir", "language" => "fr", "items" => items} =
+             tmp_dir
+             |> Path.join("elixir.json")
+             |> File.read!()
+             |> Jason.decode!()
+
+    assert items
+           |> Map.get("modules")
+           |> Enum.find(
+             &match?(
+               %{
+                 "module" => "Elixir.CompiledWithDocs",
+                 "title" => "CompiledWithDocs"
+               },
+               &1
+             )
+           )
+
+    assert items
+           |> Map.get("protocols")
+           |> Enum.find(
+             &match?(
+               %{
+                 "module" => "Elixir.CustomProtocol",
+                 "title" => "CustomProtocol"
+               },
+               &1
+             )
+           )
+
+    assert items
+           |> Map.get("extras")
+           |> Enum.find(
+             &match?(%{"source_path" => "test/fixtures/README.md", "title" => "README"}, &1)
+           )
   end
 end
