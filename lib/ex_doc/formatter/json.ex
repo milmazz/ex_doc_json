@@ -16,7 +16,7 @@ defmodule ExDoc.Formatter.JSON do
   * `items` - This JSON object contains modules, exceptions, protocols,
     Mix tasks, and extras details.
 
-  ## Modules, Exceptions, Protocols, Mix tasks
+  ## Modules, Exceptions, Protocols, Behaviours, and Mix tasks
 
   Each component is an array that includes:
 
@@ -46,7 +46,9 @@ defmodule ExDoc.Formatter.JSON do
   * `id` - Identifier
   * `title` - Document title
   * `group` - Specifies the group
-  * `content` - The document content in HTML format
+  * `source` - The document content in the source format
+  * `source_path` - Path of the original document
+  * `source_url` - URL of the original document
   """
 
   alias Mix.Project
